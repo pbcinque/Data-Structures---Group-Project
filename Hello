@@ -1,0 +1,99 @@
+import java.util.Scanner;
+
+class Node {
+    String item;
+    Node left, right;
+
+    public Node(String month) {
+        item = month;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    // Root of Binary Tree
+    Node root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    void inorder(Node node) {
+        if (node == null)
+            return;
+
+        inorder(node.left);
+        System.out.println(node.item);
+        inorder(node.right);
+    }
+
+    Node search(Node node, String targetMonth) {
+        if (node == null || node.item.equals(targetMonth)) {
+            return node;
+        }
+
+        Node leftResult = search(node.left, targetMonth);
+        if (leftResult != null) {
+            return leftResult;
+        }
+
+        return search(node.right, targetMonth);
+    }
+
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+        tree.root = new Node("June");
+        tree.root.left = new Node("April");
+        tree.root.right = new Node("August");
+        tree.root.left.left = new Node("February");
+        tree.root.left.right = new Node("May");
+        tree.root.right.left = new Node("July");
+        tree.root.right.right = new Node("October");
+        tree.root.left.left.left = new Node("January");
+        tree.root.left.left.right = new Node("March");
+        tree.root.right.right.left = new Node("September");
+        tree.root.right.right.right = new Node("November");
+        tree.root.right.right.right.right = new Node("December");
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("-ACADEMIC YEAR 2024 CALENDAR-:");
+        tree.inorder(tree.root);
+
+        while (true) {
+            System.out.print("\nEnter a month (input 'exit' to quit): ");
+            String input = sc.nextLine();
+
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+
+            Node result = tree.search(tree.root, input);
+            if (result != null) {
+                System.out.println("Days in " + input + ":");
+                displayPyramid(31);
+            } else {
+                System.out.println(input + " not found.");
+            }
+        }
+
+        sc.close();
+    }
+
+    static void displayPyramid(int maxNumber) {
+        int day = 1;
+        int maxRows = (int) Math.ceil(Math.sqrt(maxNumber));
+        for (int i = 1; i <= maxRows; i++) {
+            for (int j = maxRows; j > i; j--) {
+                System.out.print("   ");
+            }
+            for (int k = 1; k <= 2 * i - 1; k++) {
+                if (day <= maxNumber) {
+                    System.out.print(day < 10 ? " " + day + " " : day + " ");
+                    day++;
+                }
+            }
+            System.out.println();
+        }
+    }
+}
